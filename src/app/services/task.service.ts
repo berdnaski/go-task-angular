@@ -58,6 +58,16 @@ export class TaskService {
     }
   }
 
+  updateTaskNameAndDescription(taskId: string, taskCurrentStatus: TaskStatus, newTaskName: string, newTaskDescriprion: string) {
+      const taskCurrentlist = this.getTaskListByStatus(taskCurrentStatus)
+      const updateTaskList = taskCurrentlist.value.map((task) =>
+          task.id === taskId
+              ? { ...task, name: newTaskName, description: newTaskDescriprion }
+              : task
+      )
+      taskCurrentlist.next(updateTaskList)
+  }
+
   private getTaskListByStatus(taskStatus: TaskStatus) {
     const taskListObj = {
       [TaskStatusEnum.TODO] : this.todoTasks$,

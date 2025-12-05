@@ -1,23 +1,23 @@
-import { Component, inject } from '@angular/core';
-import { TaskCardComponent } from "../task-card/task-card.component";
-import { TaskService } from '../../services/task.service';
 import {
+  CdkDrag,
   CdkDragDrop,
+  CdkDropList,
   moveItemInArray,
   transferArrayItem,
-  CdkDrag,
-  CdkDropList,
 } from '@angular/cdk/drag-drop';
-import { ITask } from '../../interfaces/task.interface';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { TaskStatus } from '../../types/task-status';
+import { Component, inject } from '@angular/core';
 import { TaskStatusEnum } from '../../enums/task-status.enum';
+import { ITask } from '../../interfaces/task.interface';
+import { TaskService } from '../../services/task.service';
+import { TaskStatus } from '../../types/task-status';
+import { TaskCardComponent } from '../task-card/task-card.component';
 
 @Component({
   selector: 'app-task-list-section',
   imports: [TaskCardComponent, CdkDropList, CdkDrag, AsyncPipe, JsonPipe],
   templateUrl: './task-list-section.component.html',
-  styleUrl: './task-list-section.component.css'
+  styleUrl: './task-list-section.component.css',
 })
 export class TaskListSectionComponent {
   readonly _taskService = inject(TaskService);
@@ -32,10 +32,13 @@ export class TaskListSectionComponent {
     this.updateTaskStatus(taskId, taskCurrentStatus, droppedColumn);
   }
 
-  private updateTaskStatus(taskId: string, taskCurrentStatus: TaskStatus, droppedColumn: string) {
+  private updateTaskStatus(
+    taskId: string,
+    taskCurrentStatus: TaskStatus,
+    droppedColumn: string,
+  ) {
     let taskNextStatus: TaskStatus;
-
-    switch(droppedColumn) {
+    switch (droppedColumn) {
       case 'to-do-column':
         taskNextStatus = TaskStatusEnum.TODO;
         break;
@@ -46,15 +49,22 @@ export class TaskListSectionComponent {
         taskNextStatus = TaskStatusEnum.DONE;
         break;
       default:
-        throw Error('Coluna não identificada.');
+        throw new Error('Coluna não identificada');
     }
-
-    this._taskService.updateTaskStatus(taskId, taskCurrentStatus, taskNextStatus);
+    this._taskService.updateTaskStatus(
+      taskId,
+      taskCurrentStatus,
+      taskNextStatus,
+    );
   }
 
   private moveCardToColumn(event: CdkDragDrop<ITask[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
     } else {
       transferArrayItem(
         event.previousContainer.data,
