@@ -12,5 +12,4 @@ import { TaskCommentsModalComponent } from './components/task-comments-modal/tas
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'go-task-angular';
 }
